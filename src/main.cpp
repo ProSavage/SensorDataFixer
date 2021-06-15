@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 namespace chrono = std::chrono;
 
 
-void fillGap(DayEntry prev, DayEntry finish,  std::ofstream& ofstream);
+void fillGap(DayEntry prev, DayEntry finish,  std::ofstream& ofstream, int* blank);
 void processFile(const std::filesystem::path& pathIn, const std::filesystem::path& pathOut);
 
 std::filesystem::path dirIN, dirOUT;
@@ -43,7 +43,10 @@ void processFile(const std::filesystem::path& pathIn, const std::filesystem::pat
     DayEntry prev = {"", 0, 0, 0};
     if (file.is_open()) {
         auto start = chrono::high_resolution_clock::now();
+        int row= 0;
+        int blank = 0;
         while (std::getline(file, line)) {
+            row++;
             if (!skipFirst) {
                 skipFirst = true;
                 continue;
@@ -62,20 +65,20 @@ void processFile(const std::filesystem::path& pathIn, const std::filesystem::pat
 
                 if ((mktime(&dayEntry.date) / 3600) - (mktime(&prev.date) / 3600) > 1) {
                     std::cout << "====================================================\n";
-                    std::cout << "missing! difference between last and this row: " << (mktime(&dayEntry.date) / 3600) - (mktime(&prev.date) / 3600) << "h(s)\n";
+                    std::cout << "missing! difference between row " << row -1 << " and row " << row << ": " << (mktime(&dayEntry.date) / 3600) - (mktime(&prev.date) / 3600) << "h(s)\n";
                     std::cout << prev.to_string() << " vs " << dayEntry.to_string() << "\n";
-                    fillGap(prev, dayEntry, outFile);
+                    fillGap(prev, dayEntry, outFile, &blank);
                 }
             }
             prev = dayEntry;
         }
         auto stop = chrono::high_resolution_clock::now();
         auto duration = duration_cast<chrono::milliseconds>(stop - start);
-        std::cout << "finished " << duration.count() << "ms\n";
+        std::cout << "finished " << row << " rows in " << duration.count() << "ms; " << blank << " blank rows were inserted.\n";
     } else throw std::invalid_argument("unable to open file");
 }
 
-void fillGap(DayEntry prev, DayEntry finish, std::ofstream& ofstream) {
+void fillGap(DayEntry prev, DayEntry finish, std::ofstream& ofstream, int* blank) {
     std::vector<DayEntry> gapEntries{};
     while ((mktime(&finish.date) / 3600) - (mktime(&prev.date) / 3600) > 1) {
 //        prev.date.tm_hour++;
@@ -84,6 +87,7 @@ void fillGap(DayEntry prev, DayEntry finish, std::ofstream& ofstream) {
         prev.date = *localtime(&timePrev);
         // this can just throw it into the file output stream later
         prev.to_file(ofstream, true);
+        ++*blank;
         std::cout << "missing date was: " << prev.to_string() << "\n";
     }
 }
