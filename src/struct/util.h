@@ -2,7 +2,7 @@
 // Created by prosavage on 6/13/2021.
 //
 
-#include <vector>;
+#include <vector>
 
 #ifndef MEGANEXCELPROCESSOR_UTIL_H
 #define MEGANEXCELPROCESSOR_UTIL_H

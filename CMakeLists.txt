@@ -4,4 +4,4 @@ project(MeganExcelProcessor)
 set(CMAKE_CXX_STANDARD 20)
 
 
-add_executable(MeganExcelProcessor main.cpp struct/util.cpp struct/util.h struct/DayEntry.cpp struct/DayEntry.h)
+add_executable(MeganExcelProcessor src/main.cpp src/struct/util.cpp src/struct/util.h src/struct/DayEntry.cpp src/struct/DayEntry.h)

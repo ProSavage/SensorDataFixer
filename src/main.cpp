@@ -12,13 +12,32 @@ namespace chrono = std::chrono;
 
 
 void fillGap(DayEntry prev, DayEntry finish,  std::ofstream& ofstream);
-int main() {
+void processFile(const std::filesystem::path& pathIn, const std::filesystem::path& pathOut);
 
+std::filesystem::path dirIN, dirOUT;
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cout << "invalid input...";
+        return 1;
+    }
+    dirIN = argv[1];
+    dirOUT = argv[2];
+
+
+
+    for (const auto& entry : std::filesystem::directory_iterator(dirIN)) {
+        std::cout << "processing file: " << entry.path() << "\n";
+        processFile(entry.path(), dirOUT / entry.path().filename());
+    }
+    return 0;
+}
+
+void processFile(const std::filesystem::path& pathIn, const std::filesystem::path& pathOut) {
     std::vector<DayEntry> entries{};
     std::string line;
-    std::ifstream file("C:\\Users\\prosavage\\CLionProjects\\MeganExcelProcessor\\data.csv");
+    std::ifstream file(pathIn);
     std::ofstream outFile;
-    outFile.open("C:\\Users\\prosavage\\CLionProjects\\MeganExcelProcessor\\out.csv");
+    outFile.open(pathOut);
     auto skipFirst = false;
     DayEntry prev = {"", 0, 0, 0};
     if (file.is_open()) {
@@ -26,7 +45,6 @@ int main() {
         while (std::getline(file, line)) {
             if (!skipFirst) {
                 skipFirst = true;
-                std::cout << "skipping";
                 continue;
             }
             auto elements = split(line, ',');
@@ -39,27 +57,21 @@ int main() {
             if (!prev.date_raw.empty()) {
 
 
-                prev.to_file(outFile);
+                prev.to_file(outFile, false);
 
-                auto seconds = difftime(mktime(&prev.date), mktime(&dayEntry.date));
-                if (prev.date.tm_hour != 23 && prev.date.tm_hour != dayEntry.date.tm_hour) {
-                    if (prev.date.tm_hour + 1 != dayEntry.date.tm_hour) {
-                        std::cout << "====================================================\n";
-                        std::cout << "missing! difference between last and this row: " << seconds << "(s)\n";
-                        std::cout << prev.to_string() << " vs " << dayEntry.to_string() << "\n";
-                        fillGap(prev, dayEntry, outFile);
-                    }
+                if ((mktime(&dayEntry.date) / 3600) - (mktime(&prev.date) / 3600) > 1) {
+                    std::cout << "====================================================\n";
+                    std::cout << "missing! difference between last and this row: " << (mktime(&dayEntry.date) / 3600) - (mktime(&prev.date) / 3600) << "h(s)\n";
+                    std::cout << prev.to_string() << " vs " << dayEntry.to_string() << "\n";
+                    fillGap(prev, dayEntry, outFile);
                 }
             }
             prev = dayEntry;
         }
         auto stop = chrono::high_resolution_clock::now();
         auto duration = duration_cast<chrono::milliseconds>(stop - start);
-        std::cout << "finished " << duration << "\n";
+        std::cout << "finished " << duration.count() << "ms\n";
     } else throw std::invalid_argument("unable to open file");
-
-
-    return 0;
 }
 
 void fillGap(DayEntry prev, DayEntry finish, std::ofstream& ofstream) {
@@ -68,9 +80,9 @@ void fillGap(DayEntry prev, DayEntry finish, std::ofstream& ofstream) {
 //        prev.date.tm_hour++;
         time_t timePrev = mktime(&prev.date);
         timePrev += (60 * 60);
-        localtime_s(&prev.date, &timePrev);
+        prev.date = *localtime(&timePrev);
         // this can just throw it into the file output stream later
-        prev.to_file(ofstream);
+        prev.to_file(ofstream, true);
         std::cout << "missing date was: " << prev.to_string() << "\n";
     }
 }

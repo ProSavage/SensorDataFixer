@@ -8,7 +8,6 @@
 #include <iostream>
 
 tm create_time(int year, int month, int day, int hour, int min) {
-
     std::tm tm {0, min, hour, day, month - 1, year - 1900 };
     return tm;
 }

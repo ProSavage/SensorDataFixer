@@ -16,7 +16,7 @@ public:
     DayEntry(std::string date, int sensor1, int sensor2, int sensor3);
     std::string to_string();
 
-    void to_file(std::ofstream &ofstream);
+    void to_file(std::ofstream &ofstream, bool isGap);
     std::string date_to_string();
 };
 
