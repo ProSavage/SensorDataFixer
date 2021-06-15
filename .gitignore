@@ -3,3 +3,4 @@ out.csv
 in/p1.csv
 /.idea/
 *.iml
+/cmake-build-release/
