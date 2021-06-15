@@ -9,7 +9,7 @@
 #include <iomanip>
 #include <fstream>
 
-DayEntry::DayEntry(std::string date, int sensor1, int sensor2, int sensor3) {
+DayEntry::DayEntry(std::string date, double sensor1, double sensor2, double sensor3) {
     date_raw = date;
     this->date = format_string_to_time(date);
     sensor_1 = sensor1;

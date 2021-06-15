@@ -38,6 +38,7 @@ void processFile(const std::filesystem::path& pathIn, const std::filesystem::pat
     std::ifstream file(pathIn);
     std::ofstream outFile;
     outFile.open(pathOut);
+    outFile << "Date,,,Sensor1,Sensor2,Sensor3\n";
     auto skipFirst = false;
     DayEntry prev = {"", 0, 0, 0};
     if (file.is_open()) {
@@ -49,9 +50,9 @@ void processFile(const std::filesystem::path& pathIn, const std::filesystem::pat
             }
             auto elements = split(line, ',');
             DayEntry dayEntry{elements[0],
-                              std::stoi(elements[1]),
-                              std::stoi(elements[2]),
-                              std::stoi(elements[3])};
+                              std::stod(elements[1]),
+                              std::stod(elements[2]),
+                              std::stod(elements[3])};
 
             // check if we even have a previous, if not skip checking..
             if (!prev.date_raw.empty()) {

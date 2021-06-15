@@ -13,7 +13,7 @@ public:
     std::string date_raw;
     double sensor_1{0}, sensor_2{0}, sensor_3{0};
     DayEntry();
-    DayEntry(std::string date, int sensor1, int sensor2, int sensor3);
+    DayEntry(std::string date, double sensor1, double sensor2, double sensor3);
     std::string to_string();
 
     void to_file(std::ofstream &ofstream, bool isGap);
