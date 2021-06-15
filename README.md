@@ -1,16 +1,16 @@
 # SensorDataFixer
 
-This is a commandline application to fix sensor data issues from a csv file or a directory of csv files.
+This is a commandline application to fix sensor data issues from a csv file, or a directory of csv files.
 
-I built this software to be able to theoretically parse massive data files, and I am utilizing file streams to do this. 
-The algorithm is a O(N) implmentation, meaning it will scale linearly with the amount of data given, however it's memory footprint 
+I built this software to be able to theoretically parse massive data files, and I am utilizing file streams to do this.
+The algorithm is a O(N) implementation, meaning it will scale linearly with the amount of data given, however it's memory footprint
 should be low as the data is streamed and only the previous row is kept in memory once at a time, rather than the entire dataset being read,
 manipulated, and then written to file.
 
 
 ## Problem Description
-My girlfriend's lab requires the employees to go through massive files of sensor data. 
-This sensor data comes from fields where the sensors are **supposed** to send data once an hour. 
+My girlfriend's lab requires the employees to go through massive files of sensor data.
+This sensor data comes from fields where the sensors are **supposed** to send data once an hour.
 However, many times the connection is spotty, or I presume a sensor dies, and there are data entries that are missing.
 They are then told to manually do what this application does, which is a very tedious job.
 This application goes through the files and automatically finds rows where data is missing and inserts blank ones.
