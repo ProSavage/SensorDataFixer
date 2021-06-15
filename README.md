@@ -12,6 +12,7 @@ manipulated, and then written to file.
 My girlfriend's lab requires the employees to go through massive files of sensor data. 
 This sensor data comes from fields where the sensors are **supposed** to send data once an hour. 
 However, many times the connection is spotty, or I presume a sensor dies, and there are data entries that are missing.
+They are then told to manually do what this application does, which is a very tedious job.
 This application goes through the files and automatically finds rows where data is missing and inserts blank ones.
 
 ### Example Data
