@@ -13,4 +13,8 @@ tm format_string_to_time(std::string content);
 
 std::vector<std::string> split(std::string content, char delimiter);
 
+tm format_given_time(std::string content);
+
+bool isSpacedDate(std::string content);
+
 #endif //MEGANEXCELPROCESSOR_UTIL_H

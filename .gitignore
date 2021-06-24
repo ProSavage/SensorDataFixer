@@ -1,5 +1,6 @@
 /cmake-build-debug/
 out.csv
+in/*
 in/p1.csv
 /.idea/
 *.iml

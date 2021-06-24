@@ -11,12 +11,12 @@ class DayEntry {
 public:
     tm date {};
     std::string date_raw;
-    double sensor_1{0}, sensor_2{0}, sensor_3{0};
+    std::string sensor_1{0}, sensor_2{0}, sensor_3{0};
     DayEntry();
-    DayEntry(std::string date, double sensor1, double sensor2, double sensor3);
+    DayEntry(const std::string& date, std::string sensor1, std::string sensor2, std::string sensor3);
     std::string to_string();
 
-    void to_file(std::ofstream &ofstream, bool isGap);
+    void to_file(std::ostream &ofstream, bool isGap);
     std::string date_to_string();
 };
 

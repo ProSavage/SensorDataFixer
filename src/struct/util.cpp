@@ -8,7 +8,7 @@
 #include <iostream>
 
 tm create_time(int year, int month, int day, int hour, int min) {
-    std::tm tm {0, min, hour, day, month - 1, year - 1900 };
+    std::tm tm {0, min, hour, day, month - 1, year - 1900, 0, 0, -1 };
     return tm;
 }
 
@@ -33,9 +33,33 @@ tm format_string_to_time(std::string content) {
     auto date = date_time_split[0];
     auto time = date_time_split[1];
 
-
-
     auto date_elemts = split(date, '/');
     auto time_elemts = split(time, ':');
     return create_time(std::stoi(date_elemts[2]), std::stoi(date_elemts[0]), std::stoi(date_elemts[1]), std::stoi(time_elemts[0]), std::stoi(time_elemts[1]));
+}
+
+tm format_timestamp_to_time(std::string content) {
+    if (content.empty()) {
+        return tm{0};
+    }
+    auto date_time_split = split(std::move(content), 'T');
+
+    auto date = date_time_split[0];
+    auto time = date_time_split[1];
+    auto date_elemts = split(date, '-');
+    auto time_elemts = split(time, ':');
+    return create_time(std::stoi(date_elemts[0]), std::stoi(date_elemts[1]), std::stoi(date_elemts[2]), std::stoi(time_elemts[0]), std::stoi(time_elemts[1]));
+}
+
+
+bool isSpacedDate(std::string content) {
+    return content.find('T') == std::string::npos;
+}
+
+tm format_given_time(std::string content) {
+    if (!isSpacedDate(content)) {
+        return format_timestamp_to_time(content);
+    } else {
+        return format_string_to_time(content);
+    }
 }

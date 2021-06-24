@@ -4,17 +4,18 @@
 
 #include "DayEntry.h"
 #include <iostream>
-#include <utility>
 #include "./util.h"
-#include <iomanip>
-#include <fstream>
+#include <string>
+#include <utility>
 
-DayEntry::DayEntry(std::string date, double sensor1, double sensor2, double sensor3) {
+DayEntry::DayEntry(const std::string& date, std::string sensor1, std::string sensor2, std::string sensor3) {
+
     date_raw = date;
-    this->date = format_string_to_time(date);
-    sensor_1 = sensor1;
-    sensor_2 = sensor2;
-    sensor_3 = sensor3;
+
+    this->date = format_given_time(date);
+    sensor_1 = std::move(sensor1);
+    sensor_2 = std::move(sensor2);
+    sensor_3 = std::move(sensor3);
 
 }
 
@@ -31,12 +32,17 @@ std::string DayEntry::to_string() {
     return date_to_string()  + " " + std::to_string(date.tm_hour) + ":" + std::to_string(date.tm_min);
 }
 
-void DayEntry::to_file(std::ofstream& ofstream, bool isGap) {
-
+void DayEntry::to_file(std::ostream& ofstream, bool isGap) {
     if (isGap) {
         ofstream << ",,";
     } else {
-        ofstream << date_raw << "," << split(date_raw, ' ')[1] << ",";
+       ofstream << date_raw << ",";
+       if (isSpacedDate(date_raw)) {
+          ofstream << split(date_raw, ' ')[1];
+       } else {
+           ofstream << split(date_raw, 'T')[1];
+       }
+       ofstream << ",";
     }
 
     ofstream << std::to_string(date.tm_hour) << ":" << "00";
