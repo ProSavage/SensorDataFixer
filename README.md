@@ -2,6 +2,17 @@
 
 This is a commandline application to fix sensor data issues from a csv file, or a directory of csv files.
 
+**Usage**
+In cmd.exe: `SensorDataFixer.exe in out`
+
+**Arguments**
+
+> `in` represents the folder containing the data files to fix entries in.
+
+> `out` represents the folder where the fixed files will be written to.
+
+## About
+
 I built this software to be able to theoretically parse massive data files, and I am utilizing file streams to do this.
 The algorithm is a O(N) implementation, meaning it will scale linearly with the amount of data given, however it's memory footprint
 should be low as the data is streamed and only the previous row is kept in memory once at a time, rather than the entire dataset being read,
